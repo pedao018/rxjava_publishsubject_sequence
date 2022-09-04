@@ -51,8 +51,11 @@ class MainActivity : AppCompatActivity() {
             .subscribeOn(Schedulers.io())
             .observeOn(Schedulers.io())
             .doAfterNext {
-                if(publishSubjectTwo.hasObservers())
+                if (publishSubjectTwo.hasObservers()) {
                     Log.e("hahaha", "Pub Two has Observer- Thread: ${Thread.currentThread().name}")
+                    if (publishSubjectOne.hasComplete() && it.result == 1)
+                        publishSubjectTwo.onComplete()
+                }
             }
             .subscribeBy(
                 onNext = {
